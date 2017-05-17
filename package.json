@@ -1,0 +1,119 @@
+{
+  "name": "sftp-sync",
+  "displayName": "sftp-sync",
+  "description": "sync files between local environment to dev server",
+  "version": "0.0.1",
+  "publisher": "bloody-ux",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bloody-ux/sftp-sync"
+  },
+  "engines": {
+    "vscode": "^1.5.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "*"
+  ],
+  "main": "./extension",
+  "contributes": {
+    "commands": [
+      {
+        "command": "extension.sayHello",
+        "title": "Hello World"
+      }
+    ],
+    "configuration": {
+      "properties": {
+        "sftp-sync": {
+          "type": "object",
+          "description": "configuration for sftp-sync extension",
+          "properties": {
+            "local": {
+              "type": "object",
+              "description": "local settings for the extension",
+              "default": {
+                "root": "",
+                "files": []
+              },
+              "properties": {
+                "root": {
+                  "type": "string",
+                  "description": "the root path of the files to sync, if omitted, uses the workspace root",
+                  "default": ""
+                },
+                "files": {
+                  "type": "array",
+                  "description": "list of files to sync",
+                  "default": [],
+                  "items": {
+                    "type": "string",
+                    "description": "define what kinds of files to sync, use glob as format"
+                  }
+                },
+                "syncOnSave": {
+                  "type": "boolean",
+                  "description": "whether sync the file to remote when saving the file, default: true",
+                  "default": true
+                }
+              }
+            },
+            "remotes": {
+              "type": "array",
+              "description": "remote servers to sync",
+              "default": [],
+              "items": {
+                "type": "object",
+                "description": "settings about sftp configuration and remote directory, visit https://github.com/mscdex/ssh2#user-content-client-methods for more information.",
+                "properties": {
+                  "host": {
+                    "type": "string",
+                    "description": "the host of sftp server connected to"
+                  },
+                  "port": {
+                    "type": "number",
+                    "description": "The TCP of the API host",
+                    "default": 22,
+                    "minimum": 0,
+                    "maximum": 65535
+                  },
+                  "username": {
+                    "type": "string",
+                    "description": "The username for basic authentication."
+                  },
+                  "password": {
+                    "type": "string",
+                    "description": "The password for basic authentication."
+                  },
+                  "root": {
+                    "type": "string",
+                    "description": "the root path to sync to"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "scripts": {
+    "postinstall": "node ./node_modules/vscode/bin/install",
+    "test": "node ./node_modules/vscode/bin/test"
+  },
+  "devDependencies": {
+    "typescript": "^2.0.3",
+    "vscode": "^1.0.0",
+    "mocha": "^2.3.3",
+    "eslint": "^3.6.0",
+    "@types/node": "^6.0.40",
+    "@types/mocha": "^2.2.32"
+  },
+  "dependencies": {
+    "minimatch": "^3.0.4",
+    "moment": "^2.18.1",
+    "ssh2-sftp-client": "^1.0.5"
+  }
+}
