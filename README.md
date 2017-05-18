@@ -23,6 +23,7 @@ This extension contributes the following settings:
       "files": [
         "**/*.js"
       ],
+      "root": "/home/user/workspace"
       "syncOnSave": true
     },
     "remotes": [
@@ -37,7 +38,13 @@ This extension contributes the following settings:
   }
 ```
 
+> For more information, please see the intellisense in settings.json
+
 ## Release Notes
+
+### 0.0.3
+
+Fixed `ssh2-streams` module can't be found issue.
 
 ### 0.0.1
 
