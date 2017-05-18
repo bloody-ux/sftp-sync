@@ -2,7 +2,7 @@
   "name": "sftp-sync",
   "displayName": "sftp-sync",
   "description": "sync files between local environment to dev server",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "publisher": "bloody-ux",
   "repository": {
     "type": "git",
