@@ -1,5 +1,7 @@
 const Client = require('ssh2-sftp-client');
 const path = require('path');
+const fs = require('fs');
+const os = require('os');
 const vscode = require('vscode');
 const Moment = require('moment');
 const util = require('./helpers');
@@ -14,28 +16,40 @@ exports.syncToServer = function(filePath, config) {
     const remoteRoot = target.root;
     const remotePath = path.join(remoteRoot,relativePath)
     const remoteDir = path.dirname(remotePath);
+    try{
+      if(target.privateKey && typeof target.privateKey=='string' && fs.existsSync(target.privateKey.replace("~", os.homedir))){
+        target.privateKey=fs.readFileSync(target.privateKey.replace("~", os.homedir));
+      }
 
-    const sftp = new Client();
-    sftp.connect(target)
-    .then(() => sftp.mkdir(remoteDir, true)) // insure the directory exists
-    .then(() => sftp.put(filePath, remotePath)) // upload file to remote
-    .then(() => {
-      sftp.end();
+      const sftp = new Client();
+      sftp.connect(target)
+      .then(() => sftp.mkdir(remoteDir, true)) // insure the directory exists
+      .then(() => sftp.put(filePath, remotePath)) // upload file to remote
+      .then(() => {
+        sftp.end();
 
-      const now = Moment();
-      vscode.window.showInformationMessage(`succeed to sync ${relativePath} to ${target.host}:${remotePath}`);
-      
-      channel.appendLine(`${now.format('YYYY-MM-DD HH:mm:ss')} -> uploaded file: `);
-      channel.appendLine(`    local: ${filePath}`);
-      channel.appendLine(`    remote: ${remotePath}`);
-      channel.appendLine('');
-    })
-    .catch((err) => {
-      sftp.end();
-      
+        const now = Moment();
+        vscode.window.showInformationMessage(`succeed to sync ${relativePath} to ${target.host}:${remotePath}`);
+        
+        channel.appendLine(`${now.format('YYYY-MM-DD HH:mm:ss')} -> uploaded file: `);
+        channel.appendLine(`    local: ${filePath}`);
+        channel.appendLine(`    remote: ${remotePath}`);
+        channel.appendLine('');
+      })
+      .catch((err) => {
+        sftp.end();
+        
+        vscode.window.showErrorMessage('fail to sync file, please see the detail in output');
+        vscode.window.showErrorMessage(err.message);
+        channel.appendLine(err);
+        channel.show();
+      })
+    } catch(err){
+
       vscode.window.showErrorMessage('fail to sync file, please see the detail in output');
+      vscode.window.showErrorMessage(err.message);
       channel.appendLine(err);
       channel.show();
-    })
+    }
   });
 }
