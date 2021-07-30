@@ -26,6 +26,7 @@ exports.syncToServer = function(filePath, config) {
       vscode.window.showInformationMessage(`succeed to sync ${relativePath} to ${target.host}:${remotePath}`);
       
       channel.appendLine(`${now.format('YYYY-MM-DD HH:mm:ss')} -> uploaded file: `);
+      channel.appendLine(`    host: ${target.host}`);
       channel.appendLine(`    local: ${filePath}`);
       channel.appendLine(`    remote: ${remotePath}`);
       channel.appendLine('');
@@ -33,7 +34,7 @@ exports.syncToServer = function(filePath, config) {
     .catch((err) => {
       sftp.end();
       
-      vscode.window.showErrorMessage('fail to sync file, please see the detail in output');
+      vscode.window.showErrorMessage('fail to sync file to ${target.host}, please see the detail in output');
       channel.appendLine(err);
       channel.show();
     })
