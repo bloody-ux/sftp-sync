@@ -114,7 +114,7 @@
   "dependencies": {
     "minimatch": "^3.0.4",
     "moment": "^2.18.1",
-    "ssh2-sftp-client": "^1.0.5",
+    "ssh2-sftp-client": "^7.0.0",
     "ssh2-streams": "^0.1.16"
   }
 }
